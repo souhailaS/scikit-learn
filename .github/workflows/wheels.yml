@@ -28,7 +28,7 @@ jobs:
   check_build_trigger:
     name: Check build trigger
     runs-on: ubuntu-latest
-    if: github.repository == 'scikit-learn/scikit-learn'
+    # if: github.repository == 'scikit-learn/scikit-learn'
     outputs:
       build: ${{ steps.check_build_trigger.outputs.build }}
 
@@ -52,7 +52,7 @@ jobs:
       run:
         shell: bash -el {0}
     needs: check_build_trigger
-    if: needs.check_build_trigger.outputs.build
+    # if: needs.check_build_trigger.outputs.build
 
     strategy:
       # Ensure that a wheel builder finishes even if another fails
@@ -265,7 +265,7 @@ jobs:
     environment: upload_anaconda
     needs: [build_wheels, build_sdist]
     # The artifacts cannot be uploaded on PRs
-    if: github.event_name != 'pull_request'
+    # if: github.event_name != 'pull_request'
 
     steps:
       - name: Checkout scikit-learn
