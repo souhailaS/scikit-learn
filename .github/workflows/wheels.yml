@@ -168,8 +168,23 @@ jobs:
         with:
           python-version: "3.11" # update once build dependencies are available
 
+      - name: Cache conda environment
+        uses: actions/cache@v4
+        if: ${{ startsWith(matrix.platform_id, 'macosx') }}
+        id: cache-conda
+        with:
+          path: |
+            ~/conda_pkgs_dir
+            ~/miniconda3/envs
+          key: ${{ runner.os }}-${{ runner.arch }}-conda-${{ hashFiles('build_tools/wheels/cibw_before_build.sh') }}-${{ matrix.python }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-conda-
+
       - uses: conda-incubator/setup-miniconda@v3
         if: ${{ startsWith(matrix.platform_id, 'macosx') }}
+        with:
+          use-only-tar-bz2: true
+          conda-cache-dir: ~/conda_pkgs_dir
 
       - name: Build and test wheels
         env:
